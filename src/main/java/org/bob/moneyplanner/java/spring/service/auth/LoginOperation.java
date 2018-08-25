@@ -29,7 +29,7 @@ public class LoginOperation extends Operation {
         if (account != null && bothPasswordsMatch(credentials.getPassword(), account.getPassword())) {
             return new ServiceResult(HttpStatus.OK, "Logged in successfully", account);
         }
-        return new ServiceResult(HttpStatus.UNAUTHORIZED, "Could  not log in", null);
+        return new ServiceResult(HttpStatus.UNAUTHORIZED, "Could not log in", null);
     }
 
     private boolean bothPasswordsMatch(String requestedPlaintext, String actualHashed) {
