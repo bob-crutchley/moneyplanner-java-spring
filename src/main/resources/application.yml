@@ -1,0 +1,12 @@
+---
+spring:
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:mysql://10.0.10.10:3306/moneyplanner
+    username: root
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver
+...
