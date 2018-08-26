@@ -7,19 +7,23 @@ import org.bob.moneyplanner.java.spring.model.Model;
 import org.bob.moneyplanner.java.spring.repository.AccountRepository;
 import org.bob.moneyplanner.java.spring.service.Operation;
 import org.bob.moneyplanner.java.spring.service.ServiceResult;
+import org.bob.moneyplanner.java.spring.service.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.bob.moneyplanner.java.spring.model.service.ErrorResponse;
 
+
 @Component
 public class RegisterOperation extends Operation {
 
     private final AccountRepository accountRepository;
+    private final MailService mailService;
 
     @Autowired
-    public RegisterOperation(AccountRepository accountRepository) {
+    public RegisterOperation(AccountRepository accountRepository, MailService mailService) {
         this.accountRepository = accountRepository;
+        this.mailService = mailService;
     }
 
     @Override
@@ -33,8 +37,15 @@ public class RegisterOperation extends Operation {
         }
         account.setPassword(DigestUtils.sha256Hex(account.getPassword()));
         accountRepository.save(account);
-        serviceResult.setHttpStatus(HttpStatus.OK);
-        serviceResult.setModel(account);
+        ServiceResult emailServiceResult = mailService.sendRegistrationEmail(account);
+        if (emailServiceResult.getHttpStatus() == HttpStatus.OK) {
+            serviceResult.setHttpStatus(HttpStatus.OK);
+            serviceResult.setModel(account);
+        } else {
+            serviceResult = emailServiceResult;
+        }
         return serviceResult;
     }
+
+
 }

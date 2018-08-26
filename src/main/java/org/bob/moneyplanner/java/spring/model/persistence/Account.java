@@ -3,6 +3,9 @@ package org.bob.moneyplanner.java.spring.model.persistence;
 import org.bob.moneyplanner.java.spring.model.Model;
 
 import javax.persistence.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 public class Account extends Model {
@@ -76,5 +79,13 @@ public class Account extends Model {
 
     public void setSessionToken(String sessionToken) {
         this.sessionToken = sessionToken;
+    }
+
+    public Map<String, String> asHashMap(){
+        Map<String, String> map = new HashMap<>();
+        map.put("forename", forename);
+        map.put("surname", surname);
+        map.put("email", email);
+        return map;
     }
 }

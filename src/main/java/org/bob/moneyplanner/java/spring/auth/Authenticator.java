@@ -20,7 +20,6 @@ import java.math.BigInteger;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Date;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Component
