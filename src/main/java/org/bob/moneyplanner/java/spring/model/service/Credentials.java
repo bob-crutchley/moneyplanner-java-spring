@@ -21,4 +21,5 @@ public class Credentials extends Model {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

@@ -2,20 +2,25 @@ package org.bob.moneyplanner.java.spring.model.persistence;
 
 import org.bob.moneyplanner.java.spring.model.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Account extends Model {
     @Id
     @GeneratedValue
-    private Long id;
+    private@Column Long id;
+    @Column
     private String email;
+    @Column
     private String password;
+    @Column
     private String forename;
+    @Column
     private String surname;
+    @Column
     private boolean accountActivated;
+    @Column(length = 1024)
+    private String sessionToken;
 
     public Long getId() {
         return id;
@@ -63,5 +68,13 @@ public class Account extends Model {
 
     public void setAccountActivated(boolean accountActivated) {
         this.accountActivated = accountActivated;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 }

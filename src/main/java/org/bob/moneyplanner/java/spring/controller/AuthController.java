@@ -1,6 +1,7 @@
 package org.bob.moneyplanner.java.spring.controller;
 
 import com.google.gson.Gson;
+import org.bob.moneyplanner.java.spring.auth.Authenticator;
 import org.bob.moneyplanner.java.spring.model.Model;
 import org.bob.moneyplanner.java.spring.model.service.Credentials;
 import org.bob.moneyplanner.java.spring.service.ServiceResult;
