@@ -1,4 +1,6 @@
-package org.bob.moneyplanner.java.spring.model;
+package org.bob.moneyplanner.java.spring.model.persistence;
+
+import org.bob.moneyplanner.java.spring.model.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

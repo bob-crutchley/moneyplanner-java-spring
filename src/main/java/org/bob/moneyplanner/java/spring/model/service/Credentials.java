@@ -1,6 +1,8 @@
-package org.bob.moneyplanner.java.spring.model;
+package org.bob.moneyplanner.java.spring.model.service;
 
-public class Credentials extends Model{
+import org.bob.moneyplanner.java.spring.model.Model;
+
+public class Credentials extends Model {
     private String email;
     private String password;
 

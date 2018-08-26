@@ -1,10 +1,11 @@
 package org.bob.moneyplanner.java.spring.service.auth;
 
-import io.jsonwebtoken.Jwts;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.bob.moneyplanner.java.spring.model.Account;
-import org.bob.moneyplanner.java.spring.model.Credentials;
+import org.bob.moneyplanner.java.spring.constant.AuthConstant;
+import org.bob.moneyplanner.java.spring.model.persistence.Account;
+import org.bob.moneyplanner.java.spring.model.service.Credentials;
 import org.bob.moneyplanner.java.spring.model.Model;
+import org.bob.moneyplanner.java.spring.model.service.ErrorResponse;
 import org.bob.moneyplanner.java.spring.repository.AccountRepository;
 import org.bob.moneyplanner.java.spring.service.Operation;
 import org.bob.moneyplanner.java.spring.service.ServiceResult;
@@ -26,13 +27,17 @@ public class LoginOperation extends Operation {
     public ServiceResult execute(Model credentialsModel) {
         Credentials credentials = (Credentials) credentialsModel;
         Account account = accountRepository.findAccountByEmail(credentials.getEmail());
-        if (account != null && bothPasswordsMatch(credentials.getPassword(), account.getPassword())) {
-            return new ServiceResult(HttpStatus.OK, "Logged in successfully", account);
+        ServiceResult serviceResult = new ServiceResult();
+        if (account == null) {
+            serviceResult.setHttpStatus(HttpStatus.BAD_REQUEST);
+            serviceResult.setModel(new ErrorResponse(AuthConstant.ACCOUNT_DOES_NOT_EXIST.getValue()));
+        } else if (DigestUtils.sha256Hex(credentials.getPassword()).equals(account.getPassword())) {
+            serviceResult.setHttpStatus(HttpStatus.OK);
+            serviceResult.setModel(account);
+        } else {
+            serviceResult.setHttpStatus(HttpStatus.UNAUTHORIZED);
+            serviceResult.setModel(new ErrorResponse(AuthConstant.INCORRECT_PASSWORD.getValue()));
         }
-        return new ServiceResult(HttpStatus.UNAUTHORIZED, "Could not log in", null);
-    }
-
-    private boolean bothPasswordsMatch(String requestedPlaintext, String actualHashed) {
-        return DigestUtils.sha256Hex(requestedPlaintext).equals(actualHashed);
+        return serviceResult;
     }
 }
