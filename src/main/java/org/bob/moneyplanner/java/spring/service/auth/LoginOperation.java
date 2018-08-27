@@ -1,6 +1,5 @@
 package org.bob.moneyplanner.java.spring.service.auth;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.bob.moneyplanner.java.spring.auth.Authenticator;
 import org.bob.moneyplanner.java.spring.constant.AuthConstant;
 import org.bob.moneyplanner.java.spring.model.persistence.Account;
@@ -37,10 +36,13 @@ public class LoginOperation extends Operation {
         if (account == null) {
             serviceResult.setHttpStatus(HttpStatus.BAD_REQUEST);
             serviceResult.setModel(new ErrorResponse(AuthConstant.ACCOUNT_DOES_NOT_EXIST.getValue()));
+        } else if(!account.isAccountActivated()) {
+            serviceResult.setHttpStatus(HttpStatus.UNAUTHORIZED);
+            serviceResult.setModel(new ErrorResponse(AuthConstant.ACCOUNT_NOT_ACTIVATED.getValue()));
         } else if (authenticator.plaintextMatchesSha1(credentials.getPassword(), account.getPassword())) {
             serviceResult.setHttpStatus(HttpStatus.OK);
-            account.setSessionToken(authenticator.getNewSessionToken(account));
-            return authenticator.authenticateSessionToken(account.getSessionToken());
+            account.setAuthToken(authenticator.getNewAuthToken(account, 24));
+            return authenticator.validateAuthToken(account.getAuthToken());
         } else {
             serviceResult.setHttpStatus(HttpStatus.UNAUTHORIZED);
             serviceResult.setModel(new ErrorResponse(AuthConstant.INCORRECT_PASSWORD.getValue()));

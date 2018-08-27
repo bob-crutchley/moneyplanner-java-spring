@@ -1,6 +1,7 @@
 package org.bob.moneyplanner.java.spring.service.account;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.bob.moneyplanner.java.spring.auth.Authenticator;
 import org.bob.moneyplanner.java.spring.constant.AccountConstant;
 import org.bob.moneyplanner.java.spring.model.persistence.Account;
 import org.bob.moneyplanner.java.spring.model.Model;
@@ -19,11 +20,13 @@ public class RegisterOperation extends Operation {
 
     private final AccountRepository accountRepository;
     private final MailService mailService;
+    private final Authenticator authenticator;
 
     @Autowired
-    public RegisterOperation(AccountRepository accountRepository, MailService mailService) {
+    public RegisterOperation(AccountRepository accountRepository, MailService mailService, Authenticator authenticator) {
         this.accountRepository = accountRepository;
         this.mailService = mailService;
+        this.authenticator = authenticator;
     }
 
     @Override
@@ -36,7 +39,10 @@ public class RegisterOperation extends Operation {
             return serviceResult;
         }
         account.setPassword(DigestUtils.sha256Hex(account.getPassword()));
+        account.setAccountActivated(false);
         accountRepository.save(account);
+        account = accountRepository.findAccountByEmail(account.getEmail());
+        account.setAuthToken(authenticator.getNewAuthToken(account, 1));
         ServiceResult emailServiceResult = mailService.sendRegistrationEmail(account);
         if (emailServiceResult.getHttpStatus() == HttpStatus.OK) {
             serviceResult.setHttpStatus(HttpStatus.OK);

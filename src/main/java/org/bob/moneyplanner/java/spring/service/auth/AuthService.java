@@ -1,6 +1,7 @@
 package org.bob.moneyplanner.java.spring.service.auth;
 
 import org.bob.moneyplanner.java.spring.constant.AuthConstant;
+import org.bob.moneyplanner.java.spring.model.persistence.Account;
 import org.bob.moneyplanner.java.spring.model.service.Credentials;
 import org.bob.moneyplanner.java.spring.model.service.ErrorResponse;
 import org.bob.moneyplanner.java.spring.service.ServiceResult;
@@ -14,26 +15,21 @@ import java.util.logging.Logger;
 public class AuthService {
 
     private final Logger log = Logger.getLogger(AuthService.class.getName());
-
     private final LoginOperation loginOperation;
+    private final LogoutOperation logoutOperation;
 
     @Autowired
-    public AuthService(LoginOperation loginOperation) {
+    public AuthService(LoginOperation loginOperation,
+                       LogoutOperation logoutOperation) {
         this.loginOperation = loginOperation;
+        this.logoutOperation = logoutOperation;
     }
 
     public ServiceResult login(Credentials credentials) {
-        ServiceResult serviceResult = new ServiceResult();
-        try {
-            serviceResult = loginOperation.execute(credentials);
-        } catch (Exception e) {
-            log.severe("error logging in");
-            e.printStackTrace();
-            serviceResult.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-            serviceResult.setModel(new ErrorResponse(AuthConstant.LOGIN_FAILURE.getValue()));
-        }
-        return serviceResult;
+        return loginOperation.execute(credentials);
     }
 
-
+    public ServiceResult logout(Account account) {
+        return logoutOperation.execute(account);
+    }
 }

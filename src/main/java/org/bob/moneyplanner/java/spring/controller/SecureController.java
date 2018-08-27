@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 
 @Component
@@ -24,7 +23,7 @@ abstract class SecureController {
 
     ResponseEntity<Model> runIfAuthenticated(String sessionToken, Function<Account, ResponseEntity<Model>> exec) {
         ResponseEntity<Model> responseEntity;
-        ServiceResult authenticationResult = authenticator.authenticateSessionToken(sessionToken);
+        ServiceResult authenticationResult = authenticator.validateAuthToken(sessionToken);
         if(authenticationResult.getHttpStatus() == HttpStatus.OK) {
             try {
                 responseEntity = exec.apply((Account) authenticationResult.getModel());

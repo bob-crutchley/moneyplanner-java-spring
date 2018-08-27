@@ -15,12 +15,14 @@ import java.util.logging.Logger;
 public class AccountService {
 
     private final Logger log = Logger.getLogger(AccountService.class.getName());
-
     private final RegisterOperation registerOperation;
+    private final ActivateAccountOperation activateAccountOperation;
 
     @Autowired
-    public AccountService(RegisterOperation registerOperation) {
+    public AccountService(RegisterOperation registerOperation,
+                          ActivateAccountOperation activateAccountOperation) {
         this.registerOperation = registerOperation;
+        this.activateAccountOperation = activateAccountOperation;
     }
 
     public ServiceResult register(Account account) {
@@ -34,5 +36,9 @@ public class AccountService {
             serviceResult.setModel(new ErrorResponse(AccountConstant.FAILED_TO_CREATE_ACCOUNT.getValue()));
         }
         return serviceResult;
+    }
+
+    public ServiceResult activate(Account account) {
+        return activateAccountOperation.execute(account);
     }
 }

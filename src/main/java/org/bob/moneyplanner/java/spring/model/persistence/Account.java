@@ -3,7 +3,6 @@ package org.bob.moneyplanner.java.spring.model.persistence;
 import org.bob.moneyplanner.java.spring.model.Model;
 
 import javax.persistence.*;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ public class Account extends Model {
     @Column
     private boolean accountActivated;
     @Column(length = 1024)
-    private String sessionToken;
+    private String authToken;
 
     public Long getId() {
         return id;
@@ -73,12 +72,12 @@ public class Account extends Model {
         this.accountActivated = accountActivated;
     }
 
-    public String getSessionToken() {
-        return sessionToken;
+    public String getAuthToken() {
+        return authToken;
     }
 
-    public void setSessionToken(String sessionToken) {
-        this.sessionToken = sessionToken;
+    public void setAuthToken(String sessionToken) {
+        this.authToken = sessionToken;
     }
 
     public Map<String, String> asHashMap(){
@@ -86,6 +85,7 @@ public class Account extends Model {
         map.put("forename", forename);
         map.put("surname", surname);
         map.put("email", email);
+        map.put("authToken", authToken);
         return map;
     }
 }
