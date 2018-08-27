@@ -16,6 +16,8 @@ public class Account extends Model {
     @Column
     private String password;
     @Column
+    private String passwordSalt;
+    @Column
     private String forename;
     @Column
     private String surname;
@@ -46,6 +48,14 @@ public class Account extends Model {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
     }
 
     public String getForename() {

@@ -5,6 +5,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.bob.moneyplanner.java.spring.constant.AuthConstant;
 import org.bob.moneyplanner.java.spring.model.persistence.Account;
+import org.bob.moneyplanner.java.spring.model.service.Credentials;
 import org.bob.moneyplanner.java.spring.model.service.ErrorResponse;
 import org.bob.moneyplanner.java.spring.repository.AccountRepository;
 import org.bob.moneyplanner.java.spring.service.ServiceResult;
@@ -18,6 +19,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -74,7 +76,18 @@ public class Authenticator {
         return serviceResult;
     }
 
-    public boolean plaintextMatchesSha1(String plaintext, String sha1) {
-        return DigestUtils.sha256Hex(plaintext).equals(sha1);
+    public boolean checkPassword(Credentials credentials, Account account) {
+
+        return DigestUtils.sha256Hex(account.getPasswordSalt() + credentials.getPassword()).equals(account.getPassword());
+    }
+
+    public String createRandomPasswordSalt() {
+        char[] ch = AuthConstant.ALPHA_NUMERIC.getValue().toCharArray();
+        char[] c = new char[50];
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < 50; i++) {
+            c[i] = ch[random.nextInt(ch.length)];
+        }
+        return new String(c);
     }
 }

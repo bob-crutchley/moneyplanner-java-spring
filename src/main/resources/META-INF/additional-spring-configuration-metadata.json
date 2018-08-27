@@ -4,6 +4,16 @@
       "name": "application.secret",
       "type": "java.lang.String",
       "description": "Application secret used for session tokens."
+    },
+    {
+      "name": "application.frontend-application.host",
+      "type": "java.lang.String",
+      "description": "Host for frontend application."
+    },
+    {
+      "name": "application.frontend-application.port",
+      "type": "java.lang.String",
+      "description": "Port for frontend application."
     }
   ]
 }

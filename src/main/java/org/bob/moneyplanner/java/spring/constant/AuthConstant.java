@@ -8,7 +8,8 @@ public enum AuthConstant {
     AUTH_TOKEN_HAS_EXPIRED("Session has expired, please login again"),
     INVALID_AUTH_TOKEN("Session token is invalid"),
     NO_AUTH_TOKEN_FOR_ACCOUNT("There is no session for this account, create one by logging in"),
-    AUTH_TOKEN_VALIDATION_FAILURE("Could not authenticate, please try again later");
+    AUTH_TOKEN_VALIDATION_FAILURE("Could not authenticate, please try again later"),
+    ALPHA_NUMERIC("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 
     private final String value;
     AuthConstant(final String value) {

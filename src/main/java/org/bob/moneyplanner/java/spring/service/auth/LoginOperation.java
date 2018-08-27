@@ -39,7 +39,7 @@ public class LoginOperation extends Operation {
         } else if(!account.isAccountActivated()) {
             serviceResult.setHttpStatus(HttpStatus.UNAUTHORIZED);
             serviceResult.setModel(new ErrorResponse(AuthConstant.ACCOUNT_NOT_ACTIVATED.getValue()));
-        } else if (authenticator.plaintextMatchesSha1(credentials.getPassword(), account.getPassword())) {
+        } else if (authenticator.checkPassword(credentials, account)) {
             serviceResult.setHttpStatus(HttpStatus.OK);
             account.setAuthToken(authenticator.getNewAuthToken(account, 24));
             return authenticator.validateAuthToken(account.getAuthToken());

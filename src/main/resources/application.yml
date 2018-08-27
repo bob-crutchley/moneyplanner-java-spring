@@ -22,4 +22,7 @@ spring:
             enable: true
 application:
   secret: changeme
+  frontend-application:
+    host: localhost
+    port: 8080
 ...

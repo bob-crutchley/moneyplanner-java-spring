@@ -38,7 +38,8 @@ public class RegisterOperation extends Operation {
             serviceResult.setModel(new ErrorResponse(AccountConstant.ACCOUNT_EXISTS_WITH_SAME_EMAIL.getValue()));
             return serviceResult;
         }
-        account.setPassword(DigestUtils.sha256Hex(account.getPassword()));
+        account.setPasswordSalt(authenticator.createRandomPasswordSalt());
+        account.setPassword(DigestUtils.sha256Hex(account.getPasswordSalt() + account.getPassword()));
         account.setAccountActivated(false);
         accountRepository.save(account);
         account = accountRepository.findAccountByEmail(account.getEmail());

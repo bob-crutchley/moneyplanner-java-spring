@@ -27,7 +27,7 @@ public class MailService {
         email.setSubject(EmailConstant.REGISTRATION_SUBJECT.getValue());
         email.setToAddress(account.getEmail());
         email.setFrom(environment.getProperty("spring.mail.username"));
-        email.setContent(new EmailTemplate(EmailConstant.REGISTRATION_TEMPLATE_PATH.getValue()).getContentForAccount(account));
+        email.setContent(new EmailTemplate(EmailConstant.REGISTRATION_TEMPLATE_PATH.getValue(), environment).getContentForAccount(account));
         return sendRegistrationMailOperation.execute(email);
     }
 }
