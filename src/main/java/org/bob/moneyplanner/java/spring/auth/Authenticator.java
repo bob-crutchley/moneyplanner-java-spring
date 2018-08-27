@@ -45,7 +45,6 @@ public class Authenticator {
 
         return Jwts.builder()
                 .setId(new BigInteger(130, new SecureRandom()).toString(32))
-                .setId(account.getId().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(DateUtils.addHours(newIssuedDate, hours))
                 .signWith(signatureAlgorithm, signingKey)
