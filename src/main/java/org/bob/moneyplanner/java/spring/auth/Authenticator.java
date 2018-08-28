@@ -8,7 +8,7 @@ import org.bob.moneyplanner.java.spring.model.persistence.Account;
 import org.bob.moneyplanner.java.spring.model.service.Credentials;
 import org.bob.moneyplanner.java.spring.model.service.ErrorResponse;
 import org.bob.moneyplanner.java.spring.repository.AccountRepository;
-import org.bob.moneyplanner.java.spring.service.ServiceResult;
+import org.bob.moneyplanner.java.spring.service.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,6 @@ import javax.xml.bind.DatatypeConverter;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -52,27 +51,27 @@ public class Authenticator {
                 .compact();
     }
 
-    public ServiceResult validateAuthToken(String authToken) {
-        ServiceResult serviceResult = new ServiceResult();
-        serviceResult.setHttpStatus(HttpStatus.UNAUTHORIZED);
+    public ServiceResponse validateAuthToken(String authToken) {
+        ServiceResponse serviceResponse = new ServiceResponse();
+        serviceResponse.setHttpStatus(HttpStatus.UNAUTHORIZED);
         if (authToken == null) {
-            serviceResult.setModel(new ErrorResponse(AuthConstant.NO_AUTH_TOKEN_FOR_ACCOUNT.getValue()));
-            return serviceResult;
+            serviceResponse.setModel(new ErrorResponse(AuthConstant.NO_AUTH_TOKEN_FOR_ACCOUNT.getValue()));
+            return serviceResponse;
         }
         try {
             Claims claim = Jwts.parser()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(applicationSecret))
                     .parseClaimsJws(authToken).getBody();
-            serviceResult.setHttpStatus(HttpStatus.OK);
-            serviceResult.setModel(accountRepository.findAccountById(Long.valueOf((Integer)claim.get("id"))));
+            serviceResponse.setHttpStatus(HttpStatus.OK);
+            serviceResponse.setModel(accountRepository.findAccountById(Long.valueOf((Integer)claim.get("id"))));
         } catch(ExpiredJwtException e) {
-            serviceResult.setModel(new ErrorResponse(AuthConstant.AUTH_TOKEN_HAS_EXPIRED.getValue()));
+            serviceResponse.setModel(new ErrorResponse(AuthConstant.AUTH_TOKEN_HAS_EXPIRED.getValue()));
         } catch (SignatureException e) {
-            serviceResult.setModel(new ErrorResponse(AuthConstant.INVALID_AUTH_TOKEN.getValue()));
+            serviceResponse.setModel(new ErrorResponse(AuthConstant.INVALID_AUTH_TOKEN.getValue()));
         } catch (Exception e) {
-            serviceResult.setModel(new ErrorResponse(AuthConstant.AUTH_TOKEN_VALIDATION_FAILURE.getValue()));
+            serviceResponse.setModel(new ErrorResponse(AuthConstant.AUTH_TOKEN_VALIDATION_FAILURE.getValue()));
         }
-        return serviceResult;
+        return serviceResponse;
     }
 
     public boolean checkPassword(Credentials credentials, Account account) {

@@ -3,13 +3,13 @@ package org.bob.moneyplanner.java.spring.service;
 import org.bob.moneyplanner.java.spring.model.Model;
 import org.springframework.http.HttpStatus;
 
-public class ServiceResult {
+public class ServiceResponse {
     private HttpStatus httpStatus;
     private Model model;
 
-    public ServiceResult(){}
+    public ServiceResponse(){}
 
-    public ServiceResult(HttpStatus httpStatus, Model model) {
+    public ServiceResponse(HttpStatus httpStatus, Model model) {
         this.httpStatus = httpStatus;
         this.model = model;
     }
